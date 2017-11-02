@@ -26,7 +26,8 @@ describe('DataService Errors', () => {
             providers: [Http,
                 TransomDataService, TransomApiAuthService,
                 {
-                    provide: Router, useClass: class { navigate = jasmine.createSpy('navigate'); }
+                    provide: Router, useClass:
+                        class { public navigate = jasmine.createSpy('navigate'); }
                 },
                 {
                     provide: ConnectionBackend, useClass: MockBackend
@@ -47,33 +48,35 @@ describe('DataService Errors', () => {
             this.lastConnection = connection);
 
         // setup the headers on the Auth Service, these should be used by the Data Service
-        const auth: TransomApiAuthService = TestBed.get(TransomApiAuthService) as TransomApiAuthService;
-        this.hdr = new Headers();
-        this.hdr.append('Authorization', 'Bearer 123');
-        auth.headers = this.hdr;
+        const auth: TransomApiAuthService =
+            TestBed.get(TransomApiAuthService) as TransomApiAuthService;
+        
+        auth.getHeaders().append('Authorization', 'Bearer 123');
+        this.hdr = auth.getHeaders()
     });
 
-    it('findData error should emit ', inject([TransomDataService], (service: TransomDataService) => {
+    it('findData error should emit ',
+        inject([TransomDataService], (service: TransomDataService) => {
         let errCnt = 0;
         service.dataApiErrors().subscribe(
-            errData => {
-                expect(errData.errorText).toEqual("token is bad");
+            (errData) => {
+                expect(errData.errorText).toEqual('token is bad');
                 errCnt++;
 
             }
         );
 
         service.findData('testEntity', 'name=paul').subscribe(
-            data => {
+            (data) => {
                 // here is data
                 expect(data[0].id).toEqual(1);
             },
-            err => {
+            (err) => {
                 expect(err.status).toEqual(401);
             }
         );
         this.lastConnection.mockError(new Response(new ResponseOptions({
-            body: JSON.stringify({ code: "InvalidCredentials", message: "token is bad" }),
+            body: JSON.stringify({ code: 'InvalidCredentials', message: 'token is bad' }),
             status: 401
         })));
 

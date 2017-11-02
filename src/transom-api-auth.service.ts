@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
-import { Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
@@ -10,44 +10,26 @@ export class TransomApiAuthService {
 
   private apiCfg: any;
   private userObservable: ReplaySubject<any>;
-  headers: Headers;
+  private headers: Headers;
 
   constructor(private http: Http, private router: Router) {
-    //this.apiCfg = environment.apiclient;
+    // this.apiCfg = environment.apiclient;
     this.headers = new Headers();
     this.headers.append('Content-Type', 'application/json');
     this.userObservable = new ReplaySubject(1);
-    //this.attemptStoredLogin();
-   }
+    // this.attemptStoredLogin();
+  }
 
-   public setConfig(cfg:any){
-     this.apiCfg = cfg;
-   }
+  public setConfig(cfg: any) {
+    this.apiCfg = cfg;
+  }
 
-   public getHeaders(): Headers {
-     return this.headers;
-   }
-
-  //  bridgeMessageSeen(message: any): Observable<any> {
-  //   const url = `/rest/bridge-message/${message.id}`;
-  //   message['seen'] = true;
-  //   return this._http.put(url, JSON.stringify(message), { headers: this.headers }).map((res: any) => res.json());
-  // }
+  public getHeaders(): Headers {
+    return this.headers;
+  }
 
   public currentUser(): Observable<any> {
     return this.userObservable;
-  }
-
-  private emitNewUser(usr: any) {
-    usr.memberOf = function(grpName: string){
-      if (usr.groups) {
-        return (usr.groups.indexOf(grpName) > -1);
-
-      } else {
-        return false;
-      }
-    };
-    this.userObservable.next(usr);
   }
 
   public loginWithToken(token: string): Observable<any> {
@@ -58,20 +40,20 @@ export class TransomApiAuthService {
 
     return Observable.create((observer: any) => {
       this.http.get(url + 'me', { headers: this.headers }).map((res: any) => res.json()).subscribe(
-        data => {
+        (data) => {
           console.log('stored Login found something', data);
           this.emitNewUser(data.me);
-          observer.next({success:true});
+          observer.next({ success: true });
         },
-        err => {
+        (err) => {
           this.headers.delete('Authorization');
-          //localStorage.removeItem('apiToken');
-          if (this.apiCfg.loginRedirect){
+          // localStorage.removeItem('apiToken');
+          if (this.apiCfg.loginRedirect) {
             // redirect to the login page
             this.router.navigate(this.apiCfg.loginRedirect);
           }
-          //do some analysis here to detemine the source of the problem
-          observer.error({success:false, message:"Invalid token"})
+          // do some analysis here to detemine the source of the problem
+          observer.error({ success: false, message: 'Invalid token' });
         }
       );
 
@@ -86,48 +68,58 @@ export class TransomApiAuthService {
 
     const url = `${this.apiCfg.baseUrl}/user/`;
 
-    const hdr: string =  'Basic ' + btoa(username + ':' + password);
+    const hdr: string = 'Basic ' + btoa(username + ':' + password);
 
     this.headers.delete('Authorization');
 
     this.headers.append('Authorization', hdr);
 
     return Observable.create((observer: any) => {
-      this.http.post(url + 'login', JSON.stringify({ username, password }), { headers: this.headers })
-      .map((res: any) => res.json()).subscribe(
-        data => {
+      this.http.post(url + 'login',
+        JSON.stringify({ username, password }), { headers: this.headers })
+        .map((res: any) => res.json()).subscribe(
+        (data) => {
           if (data.success) {
             // set the auth token header to the bearer token we received
             this.headers.delete('Authorization');
             this.headers.append('Authorization', 'Bearer ' + data.token);
 
             // now go get the user
-            this.http.get(url + 'me', { headers: this.headers }).map((res: any) => res.json()).subscribe(
-              meData => {
+            this.http.get(url + 'me',
+              { headers: this.headers }).map((res: any) => res.json()).subscribe(
+              (meData) => {
                 console.log('we are here with', meData);
-
-
                 this.emitNewUser(meData.me);
                 observer.next({ success: true });
               }
               // need to handle an error here?
-            );
+              );
           }
 
         },
-        err => {
+        (err) => {
           // login failed
-          observer.error( {success: false} );
+          observer.error({ success: false });
         }
-      );
+        );
 
     });
   }
 
   public getSocketToken() {
-
     const url = `${this.apiCfg.baseUrl}/user/sockettoken`;
     return this.http.get(url, { headers: this.headers }).map((res: any) => res.json());
-
   }
+
+  private emitNewUser(usr: any) {
+    usr.memberOf = (grpName: string) => {
+      if (usr.groups) {
+        return (usr.groups.indexOf(grpName) > -1);
+      } else {
+        return false;
+      }
+    };
+    this.userObservable.next(usr);
+  }
+
 }

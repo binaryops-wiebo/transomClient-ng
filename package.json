@@ -1,7 +1,7 @@
 {
-  "name": "transomclient-ng",
+  "name": "transomClient-ng",
   "version": "0.0.20",
-  "description": "Trnasom client for Anngular 4",
+  "description": "Transom client for Anngular 4",
   "main": "./dist/index.umd.js",
   "module": "./dist/index.js",
   "typings": "./dist/index.d.ts",
@@ -22,7 +22,14 @@
     "typescript"
   ],
   "author": {
-    "name": "Wiebo Troost - BinaryOps"
+    "name": "Wiebo Troost"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/binaryops-wiebo/transomClient-ng.git"
+  },
+  "bugs": {
+    "url": "https://github.com/binaryops-wiebo/transomClient-ng/issues"
   },
   "scripts": {
     "build": "npm run build:esm && npm run build:umd",
@@ -38,7 +45,7 @@
     "docs": "compodoc -p tsconfig.json -d docs --disableCoverage --disablePrivateOrInternalSupport",
     "explorer": "source-map-explorer ./dist/index.umd.js",
     "gh-pages": "rimraf docs && npm run docs && gh-pages -d docs",
-    "lint": "npm run tslint 'src/**/*.ts'",
+    "lint": "npm run tslint --fix 'src/**/*.ts'",
     "ngcompile": "node_modules/.bin/ngc -p tsconfig-aot.json",
     "postversion": "git push && git push --tags",
     "prebuild": "rimraf dist tmp",

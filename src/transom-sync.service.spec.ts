@@ -11,7 +11,7 @@ describe('SyncService', () => {
       providers: [TransomSyncService,
         TransomApiAuthService,
         {
-          provide: Router, useClass: class { navigate = jasmine.createSpy('navigate'); }
+          provide: Router, useClass: class { public navigate = jasmine.createSpy('navigate'); }
         }
       ]
     });

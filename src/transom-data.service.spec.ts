@@ -26,7 +26,9 @@ describe('DataService', () => {
       providers: [Http,
         TransomDataService, TransomApiAuthService,
         {
-          provide: Router, useClass: class { navigate = jasmine.createSpy('navigate'); }
+          provide: Router, useClass: class {
+            public navigate = jasmine.createSpy('navigate');
+          }
         },
         {
           provide: ConnectionBackend, useClass: MockBackend
@@ -46,22 +48,21 @@ describe('DataService', () => {
       this.lastConnection = connection);
 
     // setup the headers on the Auth Service, these should be used by the Data Service
-    const auth: TransomApiAuthService = TestBed.get(TransomApiAuthService) as TransomApiAuthService;
-    this.hdr = new Headers();
-    this.hdr.append('Authorization', 'Bearer 123');
-    auth.headers = this.hdr;
+    const auth: TransomApiAuthService =
+      TestBed.get(TransomApiAuthService) as TransomApiAuthService;
+    auth.getHeaders().append('Authorization', 'Bearer 123');
+    this.hdr = auth.getHeaders();
 
-  }
+  });
 
-  );
-
-  it('findData should make a properly configured request', inject([TransomDataService], (service: TransomDataService) => {
+  it('findData should make a properly configured request',
+    inject([TransomDataService], (service: TransomDataService) => {
     service.findData('testEntity', 'name=paul').subscribe(
-      data => {
+      (data) => {
         // here is data
         expect(data[0].id).toEqual(1);
       },
-      err => {
+      (err) => {
         expect(err).toBeFalsy();
       }
     );
@@ -73,17 +74,16 @@ describe('DataService', () => {
     expect(this.lastConnection.request.url).toEqual(url);
     expect(this.lastConnection.request.headers.get('Authorization')).toEqual('Bearer 123');
     expect(this.lastConnection.request.method).toEqual(RequestMethod.Get);
-
-
   }));
 
-  it('findDataById should make a properly configured request', inject([TransomDataService], (service: TransomDataService) => {
+  it('findDataById should make a properly configured request',
+    inject([TransomDataService], (service: TransomDataService) => {
     service.findDataById('testEntity', 'testIdVal').subscribe(
-      data => {
+      (data) => {
         // here is data
         expect(data.id).toEqual('testIdVal');
       },
-      err => {
+      (err) => {
         expect(err).toBeFalsy();
       }
     );
@@ -95,17 +95,16 @@ describe('DataService', () => {
     expect(this.lastConnection.request.url).toEqual(url);
     expect(this.lastConnection.request.headers.get('Authorization')).toEqual('Bearer 123');
     expect(this.lastConnection.request.method).toEqual(RequestMethod.Get);
-
-
   }));
 
-  it('insertRecord should make a properly configured request', inject([TransomDataService], (service: TransomDataService) => {
+  it('insertRecord should make a properly configured request',
+    inject([TransomDataService], (service: TransomDataService) => {
     service.insertRecord('testEntity', { test: 'record' }).subscribe(
-      data => {
+      (data) => {
         // here is data
         expect(data.id).toEqual('testIdVal');
       },
-      err => {
+      (err) => {
         expect(err).toBeFalsy();
       }
     );
@@ -117,17 +116,16 @@ describe('DataService', () => {
     expect(this.lastConnection.request.url).toEqual(url);
     expect(this.lastConnection.request.headers.get('Authorization')).toEqual('Bearer 123');
     expect(this.lastConnection.request.method).toEqual(RequestMethod.Post);
-
-
   }));
 
-  it('updateRecord should make a properly configured request', inject([TransomDataService], (service: TransomDataService) => {
+  it('updateRecord should make a properly configured request',
+    inject([TransomDataService], (service: TransomDataService) => {
     service.updateRecord('testEntity', { _id: 'id123', test: 'record' }).subscribe(
-      data => {
+      (data) => {
         // here is data
         expect(data.id).toEqual('testIdVal');
       },
-      err => {
+      (err) => {
         expect(err).toBeFalsy();
       }
     );
@@ -140,17 +138,16 @@ describe('DataService', () => {
     expect(this.lastConnection.request.headers.get('Authorization')).toEqual('Bearer 123');
     expect(this.lastConnection.request.method).toEqual(RequestMethod.Put);
 
-
   }));
 
-
-  it('deleteRecord should make a properly configured request', inject([TransomDataService], (service: TransomDataService) => {
+  it('deleteRecord should make a properly configured request',
+    inject([TransomDataService], (service: TransomDataService) => {
     service.deleteRecord('testEntity', { _id: 'testIdVal' }).subscribe(
-      data => {
+      (data) => {
         // here is data
         expect(data.id).toEqual('testIdVal');
       },
-      err => {
+      (err) => {
         expect(err).toBeFalsy();
       }
     );
@@ -162,17 +159,16 @@ describe('DataService', () => {
     expect(this.lastConnection.request.url).toEqual(url);
     expect(this.lastConnection.request.headers.get('Authorization')).toEqual('Bearer 123');
     expect(this.lastConnection.request.method).toEqual(RequestMethod.Delete);
-
-
   }));
 
-  it('postToFunction should make a properly configured request', inject([TransomDataService], (service: TransomDataService) => {
+  it('postToFunction should make a properly configured request',
+    inject([TransomDataService], (service: TransomDataService) => {
     service.postToFunction('testFunction', { test: 'record' }).subscribe(
-      data => {
+      (data) => {
         // here is data
         expect(data.id).toEqual('testIdVal');
       },
-      err => {
+      (err) => {
         expect(err).toBeFalsy();
       }
     );
@@ -184,18 +180,17 @@ describe('DataService', () => {
     expect(this.lastConnection.request.url).toEqual(url);
     expect(this.lastConnection.request.headers.get('Authorization')).toEqual('Bearer 123');
     expect(this.lastConnection.request.method).toEqual(RequestMethod.Post);
-
-
   }));
 
-  it('getFromFunction should make a properly configured request', inject([TransomDataService], (service: TransomDataService) => {
+  it('getFromFunction should make a properly configured request',
+    inject([TransomDataService], (service: TransomDataService) => {
 
     service.getFromFunction('testFunction', 'name=paul').subscribe(
-      data => {
+      (data) => {
         // here is data
         expect(data[0].id).toEqual(1);
       },
-      err => {
+      (err) => {
         expect(err).toBeFalsy();
       }
     );
@@ -207,18 +202,17 @@ describe('DataService', () => {
     expect(this.lastConnection.request.url).toEqual(url);
     expect(this.lastConnection.request.headers.get('Authorization')).toEqual('Bearer 123');
     expect(this.lastConnection.request.method).toEqual(RequestMethod.Get);
-
-
   }));
 
-  it('deleteFromFunction should make a properly configured request', inject([TransomDataService], (service: TransomDataService) => {
+  it('deleteFromFunction should make a properly configured request',
+    inject([TransomDataService], (service: TransomDataService) => {
 
     service.deleteFromFunction('testFunction', 'name=paul').subscribe(
-      data => {
+      (data) => {
         // here is data
         expect(data[0].id).toEqual(1);
       },
-      err => {
+      (err) => {
         expect(err).toBeFalsy();
       }
     );
@@ -230,7 +224,6 @@ describe('DataService', () => {
     expect(this.lastConnection.request.url).toEqual(url);
     expect(this.lastConnection.request.headers.get('Authorization')).toEqual('Bearer 123');
     expect(this.lastConnection.request.method).toEqual(RequestMethod.Delete);
-
 
   }));
 

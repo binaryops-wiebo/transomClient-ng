@@ -5,7 +5,6 @@ import 'rxjs/add/operator/share';
 import { TransomApiAuthService } from './transom-api-auth.service';
 import 'rxjs/add/operator/map';
 
-
 @Injectable()
 export class TransomSyncService {
 
@@ -15,11 +14,9 @@ export class TransomSyncService {
   private subscribersCounter = 0;
 
   constructor(private authSvc: TransomApiAuthService) {
-
-    
   }
 
-  init(cfg:any){
+  public init(cfg: any) {
     this.apiCfg = cfg;
     const options = this.apiCfg.socketclient.options || {};
     options.autoConnect = false;
@@ -42,61 +39,55 @@ export class TransomSyncService {
     });
 
     this.authSvc.currentUser().subscribe(
-      user => {
+      (user) => {
         this.connect();
       }
     );
-
   }
 
-
-  on(eventName: string, callback: Function) {
+  public on(eventName: string, callback: any) {
     this.ioSocket.on(eventName, callback);
   }
 
-  once(eventName: string, callback: Function) {
+  public once(eventName: string, callback: any) {
     this.ioSocket.once(eventName, callback);
   }
 
-  connect() {
+  public connect() {
 
     // collect the new token!!!
     this.authSvc.getSocketToken().subscribe(
-      data => {
+      (data) => {
 
         this.ioSocket.io.opts.query = {
           token: data.token
         };
         this.ioSocket.connect();
       },
-      err => {
+      (err) => {
         throw new Error('Error getting socket token: ' + err);
       }
-
     );
-
-
-
   }
 
-  disconnect(close?: any) {
+  public disconnect(close?: any) {
     return this.ioSocket.disconnect.apply(this.ioSocket, arguments);
   }
 
-  emit(eventName: string, data?: any, callback?: Function) {
+  public emit(eventName: string, data?: any, callback?: any) {
     return this.ioSocket.emit.apply(this.ioSocket, arguments);
   }
 
-  removeListener(eventName: string, callback?: Function) {
+  public removeListener(eventName: string, callback?: any) {
     return this.ioSocket.removeListener.apply(this.ioSocket, arguments);
   }
 
-  removeAllListeners(eventName?: string) {
+  public removeAllListeners(eventName?: string) {
     return this.ioSocket.removeAllListeners.apply(this.ioSocket, arguments);
   }
 
   /** create an Observable from an event */
-  fromEvent<T>(eventName: string): Observable<T> {
+  public fromEvent<T>(eventName: string): Observable<T> {
     this.subscribersCounter++;
     return Observable.create((observer: any) => {
       this.ioSocket.on(eventName, (data: T) => {

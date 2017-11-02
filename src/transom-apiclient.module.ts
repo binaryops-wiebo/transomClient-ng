@@ -5,7 +5,6 @@ import { TransomApiAuthService } from './transom-api-auth.service';
 import { TransomDataService } from './transom-data.service';
 import { TransomSyncService } from './transom-sync.service';
 
-
 @NgModule({
   imports: [
     CommonModule, HttpModule

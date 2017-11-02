@@ -9,17 +9,15 @@ import { RouterModule, Router } from '@angular/router';
 
 import { TransomApiAuthService } from './transom-api-auth.service';
 
-
-
 describe('ApiAuthService', () => {
 
-const testCfg = {
-  baseUrl: 'http://transomtest.ca/v1/abc123/1',
-  socketclient: {
-    url: 'http://transomsocket:8000',
-    options: {}
-  }
-};
+  const testCfg = {
+    baseUrl: 'http://transomtest.ca/v1/abc123/1',
+    socketclient: {
+      url: 'http://transomsocket:8000',
+      options: {}
+    }
+  };
 
   beforeEach(() => {
 
@@ -30,7 +28,7 @@ const testCfg = {
       providers: [
         Http,
         TransomApiAuthService,
-        { provide: Router, useClass: class { navigate = jasmine.createSpy('navigate'); } },
+        { provide: Router, useClass: class { public navigate = jasmine.createSpy('navigate'); } },
         {
           provide: ConnectionBackend, useClass: MockBackend
         },
@@ -42,9 +40,9 @@ const testCfg = {
   });
 
   beforeEach(() => {
-    let service: TransomApiAuthService = TestBed.get(TransomApiAuthService) as TransomApiAuthService;
+    const service: TransomApiAuthService =
+      TestBed.get(TransomApiAuthService) as TransomApiAuthService;
     service.setConfig(testCfg);
-
 
     this.connections = [];
     this.backend = TestBed.get(ConnectionBackend) as MockBackend;
@@ -53,7 +51,6 @@ const testCfg = {
     });
   });
 
-
   it('should be created', inject([TransomApiAuthService], (service: TransomApiAuthService) => {
     expect(service).toBeTruthy();
   }));
@@ -61,34 +58,23 @@ const testCfg = {
   it('should login', inject([TransomApiAuthService], (service: TransomApiAuthService) => {
 
     service.login('testname', 'testpassword').subscribe(
-      data => {
+      (data) => {
         expect(data).toEqual({ success: true });
-
       },
-      err => {
+      (err) => {
         expect(err).toEqual({ success: false });
       }
     );
 
-    // this is the login attempt using the token from the localStorage
-    // this.connections[0].mockError(new Response(new ResponseOptions({
-    //   body: JSON.stringify({ success: false, message: 'bad code' }),
-    //   status: 401,
-    //   type: ResponseType.Error
-    // })));
-
-    const me_url: string = testCfg.baseUrl + '/user/me';
-    // expect(this.connections[0].request.url).toEqual(me_url);
-    // // auth token provided should have come from localStorage
-    // expect(this.connections[0].request.headers.get('Authorization')).toEqual('Bearer badtoken'); // see beforeEach
-    // expect(this.connections[0].request.method).toEqual(RequestMethod.Get);
+    const meUrl: string = testCfg.baseUrl + '/user/me';
 
     // now the real login attempt
-    const login_url: string = testCfg.baseUrl + '/user/login';
-    expect(this.connections[0].request.url).toEqual(login_url);
+    const loginUrl: string = testCfg.baseUrl + '/user/login';
+    expect(this.connections[0].request.url).toEqual(loginUrl);
     // auth token provided should have come from localStorage
     const basicToken = btoa('testname:testpassword');
-    expect(this.connections[0].request.headers.get('Authorization')).toEqual('Basic ' + basicToken); // see beforeEach
+    expect(this.connections[0].request.headers.get('Authorization'))
+      .toEqual('Basic ' + basicToken);
     expect(this.connections[0].request.method).toEqual(RequestMethod.Post);
 
     // let's repond with a success and a token
@@ -98,9 +84,10 @@ const testCfg = {
 
     // next is the request on /user/me
     // now the real login attempt
-    expect(this.connections[1].request.url).toEqual(me_url);
+    expect(this.connections[1].request.url).toEqual(meUrl);
     // auth token provided should have come from localStorage
-    expect(this.connections[1].request.headers.get('Authorization')).toEqual('Bearer received_token_123'); // see beforeEach
+    expect(this.connections[1].request.headers.get('Authorization'))
+      .toEqual('Bearer received_token_123');
     expect(this.connections[1].request.method).toEqual(RequestMethod.Get);
 
     // let's repond with a test user object
@@ -111,7 +98,7 @@ const testCfg = {
     // that should get emitted on the currentUser observable
     let userReceived = false;
     service.currentUser().subscribe(
-      usr => {
+      (usr) => {
         console.log('****', usr);
         expect(usr.email).toEqual('email@transomtest.ca');
         userReceived = true;
