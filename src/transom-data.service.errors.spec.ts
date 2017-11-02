@@ -50,9 +50,8 @@ describe('DataService Errors', () => {
         // setup the headers on the Auth Service, these should be used by the Data Service
         const auth: TransomApiAuthService =
             TestBed.get(TransomApiAuthService) as TransomApiAuthService;
-        
         auth.getHeaders().append('Authorization', 'Bearer 123');
-        this.hdr = auth.getHeaders()
+        this.hdr = auth.getHeaders();
     });
 
     it('findData error should emit ',

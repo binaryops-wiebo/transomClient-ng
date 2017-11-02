@@ -1,5 +1,5 @@
 {
-  "name": "transomClient-ng",
+  "name": "transomclient-ng",
   "version": "0.0.20",
   "description": "Transom client for Anngular 4",
   "main": "./dist/index.umd.js",
