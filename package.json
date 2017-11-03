@@ -55,7 +55,7 @@
     "test": "karma start",
     "test:watch": "karma start --auto-watch --no-single-run",
     "tslint": "tslint",
-    "releaseminor" : "npm run ci && node release.js minor"
+    "releasepatch" : "npm run ci && node release.js patch"
   },
   "dependencies": {},
   "peerDependencies": {
