@@ -90,7 +90,7 @@ export class TransomApiAuthService {
               (meData) => {
                 console.log('we are here with', meData);
                 this.emitNewUser(meData.me);
-                observer.next({ success: true });
+                observer.next({ success: true, token: data.token });
               }
               // need to handle an error here?
               );

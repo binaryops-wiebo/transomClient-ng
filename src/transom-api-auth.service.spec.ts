@@ -59,12 +59,17 @@ describe('ApiAuthService', () => {
 
     service.login('testname', 'testpassword').subscribe(
       (data) => {
-        expect(data).toEqual({ success: true });
+        expect(data).toEqual({ success: true, token: 'received_token_123' });
       },
       (err) => {
         expect(err).toEqual({ success: false });
       }
     );
+
+    // let's repond with a success and a token
+    this.connections[0].mockRespond(new Response(new ResponseOptions({
+      body: JSON.stringify({ success: true, token: 'received_token_123' }),
+    })));
 
     const meUrl: string = testCfg.baseUrl + '/user/me';
 
@@ -76,11 +81,6 @@ describe('ApiAuthService', () => {
     expect(this.connections[0].request.headers.get('Authorization'))
       .toEqual('Basic ' + basicToken);
     expect(this.connections[0].request.method).toEqual(RequestMethod.Post);
-
-    // let's repond with a success and a token
-    this.connections[0].mockRespond(new Response(new ResponseOptions({
-      body: JSON.stringify({ success: true, token: 'received_token_123' }),
-    })));
 
     // next is the request on /user/me
     // now the real login attempt
