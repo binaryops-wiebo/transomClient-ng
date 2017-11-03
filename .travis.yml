@@ -8,7 +8,9 @@ addons:
       - google-chrome-stable
 language: node_js
 node_js:
-  - node
+  - "8"
+  - "7"
+  - "6"
 script:
   - npm run ci
 before_script:
