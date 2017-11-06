@@ -41,7 +41,6 @@ export class TransomApiAuthService {
     return Observable.create((observer: any) => {
       this.http.get(url + 'me', { headers: this.headers }).map((res: any) => res.json()).subscribe(
         (data) => {
-          console.log('stored Login found something', data);
           this.emitNewUser(data.me);
           observer.next({ success: true });
         },
