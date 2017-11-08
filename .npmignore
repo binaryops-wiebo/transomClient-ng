@@ -4,7 +4,7 @@ npm-debug.log
 .travis.yml
 gulpfile.js
 karma-test-entry.ts
-karama.conf.ts
+karma.conf.ts
 package-lock.json
 release.js
 tsconfig-aot.json

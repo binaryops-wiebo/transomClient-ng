@@ -16,9 +16,6 @@
     "aot-compilation",
     "library",
     "ng",
-    "seed",
-    "starter",
-    "tick-tock",
     "typescript"
   ],
   "author": {
@@ -50,12 +47,11 @@
     "postversion": "git push && git push --tags",
     "prebuild": "rimraf dist tmp",
     "prebuild:watch": "rimraf dist tmp",
-    "prepublishOnly": "npm run ci",
     "preversion": "npm run ci",
     "test": "karma start",
     "test:watch": "karma start --auto-watch --no-single-run",
     "tslint": "tslint",
-    "releasepatch": "npm run ci && node release.js patch"
+    "releasepatch": "node release.js patch"
   },
   "dependencies": {},
   "peerDependencies": {
