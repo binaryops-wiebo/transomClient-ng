@@ -1,28 +1,25 @@
 # Node
 node_modules
 npm-debug.log
-
-# Yarn
+.travis.yml
+gulpfile.js
+karma-test-entry.ts
+karama.conf.ts
+package-lock.json
+release.js
+tsconfig-aot.json
+tsconfig.json
+tslint.json
+webpack-test.config.ts
+webpack-umd.config.ts
 yarn-error.log
-
-# JetBrains
 .idea/
-
-# VS Code
 .vscode/
-
-# Windows
 Thumbs.db
 Desktop.ini
-
-# Mac
 .DS_Store
-
-# Temporary files
 coverage/
 demo/
 docs
 tmp
-
-# Library files
 src/
