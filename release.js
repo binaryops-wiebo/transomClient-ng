@@ -16,6 +16,7 @@ if (versionIncrement != 'major' && versionIncrement != 'minor' && versionIncreme
     process.exit(1);
 }
 
+
 // Increment the version in package.json
 exec('npm version ' + versionIncrement);
 
